@@ -55,8 +55,8 @@ def find_data_daily():
     if request.method == 'POST':
         # Accessing json data from request
         data = request.get_json()
-        w = [11716.56232343, -5173.3898968  , 6553.07205736 , 6553.07205736 ,120.91029698]
-        b =  17815.393747051043
+        w = [0.24968935, 0.24705427, 0.24762563, 0.24762563, 0.01461352]
+        b =  [-0.01576464]
         
         # Extract and prepare the input data
         x = np.array([
