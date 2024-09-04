@@ -17,10 +17,10 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/login">Login</a>
+                        <a class="nav-link" href="#" id="loginLink">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/signup">Sign Up</a>
+                        <a class="nav-link" href="#" id="signupLink">Sign Up</a>
                     </li>
                 </ul>
             </div>
@@ -28,7 +28,7 @@
     </nav>
 
     <!-- Main content -->
-    <div class="container mt-5">
+    <div class="container mt-5" id="content">
         <h1>Prediction Page</h1>
         <p>Enter your data to get predictions.</p>
 
@@ -60,25 +60,62 @@
     </div>
 
     <script>
-        document.getElementById('predictionForm').addEventListener('submit', async function(e) {
+        document.getElementById('loginLink').addEventListener('click', function(e) {
             e.preventDefault();
-            const formData = {
-                open: document.getElementById('open').value,
-                low: document.getElementById('low').value,
-                close: document.getElementById('close').value,
-                adj: document.getElementById('adj').value,
-                vol: document.getElementById('vol').value
-            };
-            const response = await fetch('/find_data_daily', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
-            const result = await response.json();
-            document.getElementById('predictionResult').innerText = `Prediction: ${result.message}`;
+            fetchPage('/login');
         });
+
+        document.getElementById('signupLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            fetchPage('/signup');
+        });
+
+        function fetchPage(url) {
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'text/html'
+                }
+            })
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('content').innerHTML = html;
+                // Optionally, reattach any event listeners to the new content
+                attachFormListeners();
+            })
+            .catch(error => console.error('Error fetching the page:', error));
+        }
+
+        function attachFormListeners() {
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+
+            if (loginForm) {
+                loginForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    const formData = new FormData(this);
+                    const response = await fetch('/login', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const result = await response.json();
+                    document.getElementById('loginResponse').innerText = result.response;
+                });
+            }
+
+            if (signupForm) {
+                signupForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    const formData = new FormData(this);
+                    const response = await fetch('/signup', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const result = await response.json();
+                    document.getElementById('signupResponse').innerText = result.response;
+                });
+            }
+        }
     </script>
 </body>
 </html>
