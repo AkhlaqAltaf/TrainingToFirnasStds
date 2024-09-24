@@ -1,4 +1,6 @@
 class Calculator2:
+
+
     def __init__(self):
         self.doc() 
         while True:
@@ -7,9 +9,14 @@ class Calculator2:
                 print("Exiting the calculator.")
                 break
             
-
-            a = float(self.commands("PLEASE ENTER a = "))
-            b = float(self.commands("PLEASE ENTER b = "))
+            try:
+                a = float(self.commands("PLEASE ENTER a = "))
+                b = float(self.commands("PLEASE ENTER b = "))
+            except ValueError:
+                print("Sorry for incovenience. Please try again and enter valid number!...")
+                continue
+            finally:
+                print("Thanks for choosing us...")
 
             if operator == "1":
                 print(f"Result: {self.add(a,b)}")
